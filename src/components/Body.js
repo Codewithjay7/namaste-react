@@ -1,10 +1,11 @@
 import { CDN_URL } from "../utils/constants";
 import RestaurantCard from "./RestaurantCard";
 import { useState, useEffect } from "react";
+import Shimmer from "./Shimmer";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestraunt] = useState([]);
-
+  //const [FilteredRestaurant,setFilteredRestaurant] = useState([]);
   useEffect(() => {
     fetchData();
   }, []);
@@ -21,27 +22,28 @@ const Body = () => {
     const restaurants =
       json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants;
+  ``      
     console.log("res==>", restaurants);
 
     const check = json.data.cards[4].card.card;
     console.log("check==>", check);
 
-    
+    //optional chaining
     setListOfRestraunt(restaurants);
   };
-
-  return (
+  
+  //condiional Rendering--->for a show fack cards
+  return listOfRestaurants.length === 0?<Shimmer />: (
     <div className="body">
       <div className="filter">
         <button
           className="filter-btn"
           onClick={() => {
             const filteredList = listOfRestaurants.filter(
-              (res) => res.info.avgRating > 4
+              (res) => res.info.avgRating > 4.3
             );
-            setFilteredRestaurant(filteredList);
+            setListOfRestraunt(filteredList);
           }}
-
         >
           Top Rated Restaurants
         </button>
@@ -53,8 +55,7 @@ const Body = () => {
           <h2>Loading restaurants...</h2>
         ) : (
           listOfRestaurants.map((item) => (
-              <RestaurantCard key={item.info.id} resData={item} />
-           
+            <RestaurantCard key={item.info.id} resData={item} />
           ))
         )}
       </div>

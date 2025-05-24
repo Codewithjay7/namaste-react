@@ -72,3 +72,8 @@
 .filter {
     display: flex;
 }
+.loading-img{
+    width: 50%;
+    height:40%;
+    padding-left: 20%;
+}
