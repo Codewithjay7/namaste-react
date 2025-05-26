@@ -1,12 +1,15 @@
-import { CDN_URL } from "../utils/constants";
+//import { CDN_URL } from "../utils/constants";
 import RestaurantCard from "./RestaurantCard";
 import { useState, useEffect } from "react";
 import Shimmer from "./Shimmer";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestraunt] = useState([]);
+  const [filteredRestaurants, setFilteredRestaurants] = useState([]);
+
   const [searchText, setsearchText] = useState("");
-  //const [FilteredRestaurant,setFilteredRestaurant] = useState([]);
+
+//this use effect is used to fetch the data from the api all time when the page is loaded
   useEffect(() => {
     fetchData();
   }, []);
@@ -20,17 +23,12 @@ const Body = () => {
 
     console.log("fetchdata==>", json);
 
-    const restaurants =
-      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
-        ?.restaurants;
-    ``;
-    console.log("res==>", restaurants);
-
-    const check = json.data.cards[4].card.card;
-    console.log("check==>", check);
+    const restaurants = json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+    console.log("listOf-res==>", restaurants);
 
     //optional chaining
     setListOfRestraunt(restaurants);
+    setFilteredRestaurants(restaurants);
   };
 
   //condiional Rendering--->for a show fack cards
@@ -40,6 +38,7 @@ const Body = () => {
     <div className="body">
       <div className="filter">
         <div className="search">
+          {/* //when i am write all body component are re reander */}
           <input
             type="text"
             className="search-box"
@@ -49,10 +48,14 @@ const Body = () => {
             }}
           />
           <button
-          onClick=
-          {() => {
-            console.log(searchText);
-          }}>
+            onClick={() => {
+              console.log(searchText);
+              const filteredRestaurant = listOfRestaurants.filter((res) =>
+                res.info.name.toLowerCase().includes(searchText.toLowerCase())
+              );
+              setFilteredRestaurants(filteredRestaurant);
+            }}
+          >
             search
           </button>
         </div>
@@ -74,7 +77,7 @@ const Body = () => {
         {listOfRestaurants.length === 0 ? (
           <h2>Loading restaurants...</h2>
         ) : (
-          listOfRestaurants.map((item) => (
+          filteredRestaurants.map((item) => (
             <RestaurantCard key={item.info.id} resData={item} />
           ))
         )}
