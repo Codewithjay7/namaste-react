@@ -1,4 +1,10 @@
+
+
+**sortcut for create component 
+rafce 
+
 # Namaste React 🚀
+
 
 
 # Parcel
@@ -144,3 +150,12 @@ git push -u origin main
 #for start server 
 
 npm run start 
+
+ **<Outlet />
+
+ is used to you call a childeren then difind to show use a outlet in a main side
+
+ 2 types of routing 
+
+ -client side
+ -server side
