@@ -1,73 +1,83 @@
-//import { CDN_URL } from "../utils/constants";
-import RestaurantCard from "./RestaurantCard";
-import { useState, useEffect } from "react";
-import Shimmer from "./Shimmer";
-import { Link } from "react-router-dom";
+// Import necessary modules and components
+// import { CDN_URL } from "../utils/constants"; // (Commented out - used if image CDN URL was needed)
+import RestaurantCard from "./RestaurantCard"; // Component to display each restaurant
+import { useState, useEffect } from "react"; // React hooks for state and lifecycle
+import Shimmer from "./Shimmer"; // Shimmer UI for loading effect
+import { Link } from "react-router-dom"; // To navigate to individual restaurant pages
 
-
+// Body component to render the main content
 const Body = () => {
+  // State to store the complete list of restaurants
   const [listOfRestaurants, setListOfRestraunt] = useState([]);
+
+  // State to store filtered list for search or rating-based filtering
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
 
+  // State to store the text typed into the search box
   const [searchText, setsearchText] = useState("");
 
-//this use effect is used to fetch the data from the api all time when the page is loaded
+  // useEffect will call fetchData only once after the component mounts (like componentDidMount)
   useEffect(() => {
-    fetchData();
+    fetchData(); // Fetch restaurant data on page load
   }, []);
 
+  // Function to fetch restaurant data from Swiggy API
   const fetchData = async () => {
     const data = await fetch(
       "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9351929&lng=77.62448069999999&page_type=DESKTOP_WEB_LISTING"
     );
 
-    const json = await data.json();
+    const json = await data.json(); // Convert response to JSON
+    console.log("fetchdata==>", json); // Log full response for debugging
 
-    console.log("fetchdata==>", json);
-
+    // Extract restaurant array using optional chaining
     const restaurants = json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
-    console.log("listOf-res==>", restaurants);
+    console.log("listOf-res==>", restaurants); // Log extracted list
 
-    //optional chaining
+    // Set the full list and filtered list
     setListOfRestraunt(restaurants);
     setFilteredRestaurants(restaurants);
   };
 
-  //condiional Rendering--->for a show fack cards
+  // Conditional rendering: if restaurants not yet loaded, show shimmer effect
   return listOfRestaurants.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body">
       <div className="filter">
         <div className="search">
-          {/* //when i am write all body component are re reander */}
+          {/* Input for search functionality - controlled input with value from state */}
           <input
             type="text"
             className="search-box"
             value={searchText}
             onChange={(e) => {
-              setsearchText(e.target.value);
+              setsearchText(e.target.value); // Update searchText on change
             }}
           />
+          {/* Search button triggers filter on click */}
           <button
             onClick={() => {
-              console.log(searchText);
+              console.log(searchText); // Log current search text
+              // Filter restaurants by name using case-insensitive comparison
               const filteredRestaurant = listOfRestaurants.filter((res) =>
                 res.info.name.toLowerCase().includes(searchText.toLowerCase())
               );
-              setFilteredRestaurants(filteredRestaurant);
+              setFilteredRestaurants(filteredRestaurant); // Update filtered list
             }}
           >
             search
           </button>
         </div>
+
+        {/* Button to show only top-rated restaurants with rating > 4.3 */}
         <button
           className="filter-btn"
           onClick={() => {
             const filteredList = listOfRestaurants.filter(
               (res) => res.info.avgRating > 4.3
             );
-            setListOfRestraunt(filteredList);
+            setListOfRestraunt(filteredList); // Update main list (note: this overwrites original)
           }}
         >
           Top Rated Restaurants
@@ -75,14 +85,22 @@ const Body = () => {
       </div>
 
       <div className="res-container">
+        {/* Debug log to see the filtered list */}
         {console.log("filterres==>", listOfRestaurants)}
+        
+        {/* Render filtered restaurants or loading text */}
         {listOfRestaurants.length === 0 ? (
           <h2>Loading restaurants...</h2>
         ) : (
+          // Map through filteredRestaurants to render each card
           filteredRestaurants.map((item) => (
-            <Link key={item.info.id} 
-            to = {"/restaurans/"+item.info.id}>
-              <RestaurantCard  resData={item} /></Link>
+            <Link
+              key={item.info.id} // Unique key for each item
+              to={"/restaurans/" + item.info.id} // Link to individual restaurant page
+            >
+              {/* Pass restaurant data as props to RestaurantCard component */}
+              <RestaurantCard resData={item} />
+            </Link>
           ))
         )}
       </div>
@@ -90,4 +108,5 @@ const Body = () => {
   );
 };
 
+// Export the Body component so it can be used in other parts of the app
 export default Body;
