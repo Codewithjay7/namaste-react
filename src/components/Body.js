@@ -4,6 +4,7 @@ import RestaurantCard from "./RestaurantCard"; // Component to display each rest
 import { useState, useEffect } from "react"; // React hooks for state and lifecycle
 import Shimmer from "./Shimmer"; // Shimmer UI for loading effect
 import { Link } from "react-router-dom"; // To navigate to individual restaurant pages
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 // Body component to render the main content
 const Body = () => {
@@ -31,13 +32,22 @@ const Body = () => {
     console.log("fetchdata==>", json); // Log full response for debugging
 
     // Extract restaurant array using optional chaining
-    const restaurants = json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+    const restaurants =
+      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants;
     console.log("listOf-res==>", restaurants); // Log extracted list
 
     // Set the full list and filtered list
     setListOfRestraunt(restaurants);
     setFilteredRestaurants(restaurants);
   };
+
+  const onlineStatus = useOnlineStatus();
+  if (onlineStatus === false)
+    return (
+      <h1>you are offline please check your internet connection </h1>
+
+    )
 
   // Conditional rendering: if restaurants not yet loaded, show shimmer effect
   return listOfRestaurants.length === 0 ? (
@@ -87,7 +97,7 @@ const Body = () => {
       <div className="res-container">
         {/* Debug log to see the filtered list */}
         {console.log("filterres==>", listOfRestaurants)}
-        
+
         {/* Render filtered restaurants or loading text */}
         {listOfRestaurants.length === 0 ? (
           <h2>Loading restaurants...</h2>
