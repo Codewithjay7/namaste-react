@@ -19,33 +19,34 @@ const Header = () => {
   });
 
   return (
-    <div className="flex">
+    <div className="flex justify-between lg:bg-black mb-4 text-white sm:bg-gray-800 shadow-lg "> 
+    {/* //for dark mode // dark: */}
       <div className="logo-container">
-        <img className="w-8" src={LOGO_URL} />
+        <img className="w-32" src={LOGO_URL} />
       </div>
-      <div className="nav-items">
-        <ul>
-          <li>
+      <div className="flex items-center ">
+        <ul className="flex p-4 m-4">
+          <li className="px-4">
             Online Status: {onlineStatus? "✅": "🔴"}
           </li>
-          <li>
+          <li className="px-4">
           <Link to="/">Home
           </Link>
-          </li>
-          <li>
+          </li >
+          <li className="px-4">
             <Link to="/about">About Us</Link>
           </li>
           
-          <li>
+          <li className="px-4">
             <Link to="/contact">Contact Us</Link>
           </li>
-          <li>
+          <li className="px-4">
             <Link to="/grocery">Grocery</Link>
           </li>
 
-          <li>Cart</li>
+          <li  className="px-4">Cart</li>
           <button
-            className="login"
+            className="px-4"
             onClick={() => {
               btnNameReact === "login"
                 ? setBtnNameReact("logout")

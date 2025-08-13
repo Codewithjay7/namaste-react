@@ -54,12 +54,12 @@ const Body = () => {
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="filter">
-        <div className="search">
+      <div className="filter flex">
+        <div className="search m-4 p-4">
           {/* Input for search functionality - controlled input with value from state */}
           <input
             type="text"
-            className="search-box"
+            className="border border-solid border-black text-black pl-1"
             value={searchText}
             onChange={(e) => {
               setsearchText(e.target.value); // Update searchText on change
@@ -67,6 +67,7 @@ const Body = () => {
           />
           {/* Search button triggers filter on click */}
           <button
+          className="m-4 py-2 px-4 bg-gray-400 rounded-lg text-black"    
             onClick={() => {
               console.log(searchText); // Log current search text
               // Filter restaurants by name using case-insensitive comparison
@@ -79,10 +80,10 @@ const Body = () => {
             search
           </button>
         </div>
-
+<div className="flex m-4 p-4 items-center">
         {/* Button to show only top-rated restaurants with rating > 4.3 */}
         <button
-          className="filter-btn"
+          className=" px-4 py-2 bg-gray-200 rounded-lg text-black"
           onClick={() => {
             const filteredList = listOfRestaurants.filter(
               (res) => res.info.avgRating > 4.3
@@ -92,9 +93,10 @@ const Body = () => {
         >
           Top Rated Restaurants
         </button>
+        </div>
       </div>
 
-      <div className="res-container">
+      <div className="res-container flex flex-wrap ">
         {/* Debug log to see the filtered list */}
         {console.log("filterres==>", listOfRestaurants)}
 
